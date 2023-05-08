@@ -37,7 +37,7 @@ class Player:
             if x > center:
                 if self.velocity.x>0:
                     self.velocity.x = 0
-                self.pos.x += (right_edge - x) *dt
+                self.pos.x += (right_edge - x) * dt
             if x+engine.world.BLOCK_SIZE < center:
                 val = (left_edge-(x+engine.world.BLOCK_SIZE))
                 if self.velocity.x<0:
@@ -46,7 +46,7 @@ class Player:
 
         touching_foot = len(world.check_collision(self.pos.x+1, self.pos.y+self.HEIGHT-10, self.WIDTH-2, 10)) >0
         if touching_foot and len(intersected_with)==0:
-            self.pos.y-=2
+            self.pos.y-= min(max(self.velocity.x, 5),1)
 
         head_touching = len(world.check_collision(self.pos.x+1, self.pos.y-1, self.WIDTH-2, 5)) >0
         if head_touching and self.velocity.y<0:
