@@ -16,14 +16,22 @@ class Game:
         while self.running:
             dt = self.clock.tick(2000) / 1000
             self.update(dt)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                 self.events(event)
             if not self.running:
                 break
+
             self.window.fill((255, 255, 255))
             self.render()
             pygame.display.update()
+        # * Quit Code
         pygame.quit()
         quit()
+
+
+#cool people function DO NOT DELETE!!!!! (im looking at you tyler >:((((())))))
+def cum():
+    print('cum')
