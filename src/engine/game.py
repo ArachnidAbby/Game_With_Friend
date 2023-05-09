@@ -14,7 +14,7 @@ class Game:
 
     def start(self):
         while self.running:
-            dt = self.clock.tick(2000) / 1000
+            dt = self.clock.tick() / 1000
             self.update(dt)
 
             for event in pygame.event.get():
@@ -24,14 +24,8 @@ class Game:
             if not self.running:
                 break
 
-            self.window.fill((255, 255, 255))
             self.render()
             pygame.display.update()
         # * Quit Code
         pygame.quit()
         quit()
-
-
-#cool people function DO NOT DELETE!!!!! (im looking at you tyler >:((((())))))
-def cum():
-    print('cum')
