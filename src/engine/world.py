@@ -30,7 +30,8 @@ class World:
 
     def __init__(self, width, height):
         self.map = [[Blocks.air] * width for _ in range(height)]
-        self.world_surf = pygame.Surface((width*BLOCK_SIZE, height*BLOCK_SIZE)).convert()
+        self.world_surf = pygame.Surface((width*BLOCK_SIZE, height*BLOCK_SIZE))
+        self.world_surf = self.world_surf.convert()
         self.changes = []
         self.update_cooldown = 0
 
@@ -62,15 +63,17 @@ class World:
         self._update_surf()
         surface.blit(self.world_surf, (x_off, y_off))
 
-    def check_collision(self, x, y, w, h):
-        rows = self.map[math.floor(y/BLOCK_SIZE):math.ceil((h+y)/BLOCK_SIZE)]
+    def check_collision(self, collider):
+        y_min, y_max, x_min, x_max = collider.get_grid_indices(BLOCK_SIZE)
+        rows = self.map[y_min: y_max]
         colliding_with = []
 
         for by, row in enumerate(rows):
-            blocks = row[math.floor(x/BLOCK_SIZE):math.ceil((w+x)/BLOCK_SIZE)]
+            blocks = row[x_min:x_max]
             for bx, block in enumerate(blocks):
                 if block is not None:  # ! AIR CHECK
-                    colliding_with.append((bx*BLOCK_SIZE+x, by*BLOCK_SIZE+y))
+                    colliding_with.append((bx*BLOCK_SIZE+collider.x,
+                                           by*BLOCK_SIZE+collider.y))
 
         return colliding_with
 
@@ -86,7 +89,7 @@ class World:
 
         self.update_cooldown = 0
         row_count = len(self.map)-1
-        row_length =len(self.map[0])-1
+        # row_length =len(self.map[0])-1
         for y, row in enumerate(self.map[::-1]):
             for x, block in enumerate(row):
                 under = self.map[min(row_count-y+1, row_count)][x]

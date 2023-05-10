@@ -4,7 +4,7 @@ import math
 
 
 COOLDOWN_TIME = 0.14
-RENDER_COOLDOWN = 1/60
+RENDER_COOLDOWN = 1/185
 
 game = engine.Game()
 game.world = engine.World(int(600/engine.world.BLOCK_SIZE), int(600/engine.world.BLOCK_SIZE))
@@ -16,8 +16,8 @@ game.bullets = []
 
 
 def render():
-    # if game.render_cooldown < RENDER_COOLDOWN:
-        # return
+    if game.render_cooldown < RENDER_COOLDOWN:
+        return
 
     game.window.fill((255, 255, 255))
     game.world.render(game.window, 0, 0)

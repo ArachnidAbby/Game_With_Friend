@@ -1,6 +1,14 @@
 import pygame
 import math
 import engine.world
+import os
+os.environ['SDL_AUDIODRIVER'] = 'pulse'
+
+pygame.mixer.init()
+
+
+EXPLOSION_SOUND = pygame.mixer.Sound(file='src/explosion.wav')
+EXPLOSION_SOUND.set_volume(0.25)
 
 
 class Bullet:
@@ -18,6 +26,8 @@ class Bullet:
         self.velocity.y += py
         self.fill = fill
         self.radius = r
+        self.collider = engine.BoxCollider(self.pos.x, self.pos.y,
+                                           self.WIDTH, self.HEIGHT)
 
     def render(self, surf):
         pygame.draw.rect(surf, (0, 255, 0), [self.pos.x, self.pos.y, self.WIDTH, self.HEIGHT])
@@ -25,14 +35,16 @@ class Bullet:
     def update(self, dt, world, player) -> bool:
         '''returns if the object should destruct'''
         self.pos += self.velocity*dt
+        self.collider.pos += self.velocity*dt
         self.velocity.y += world.GRAVITY*dt
 
         # destroy after 10 seconds of falling
         if self.velocity.y >= world.GRAVITY*10:
             return True
 
-        colliding = len(world.check_collision(self.pos.x, self.pos.y, self.WIDTH, self.HEIGHT)) > 0
+        colliding = len(world.check_collision(self.collider)) > 0
         if colliding:
+            EXPLOSION_SOUND.play()
             wx = math.floor(self.pos.x/engine.world.BLOCK_SIZE)
             wy = math.floor(self.pos.y/engine.world.BLOCK_SIZE)
             rows = world.map[max(wy-self.radius, 0): min(wy+self.radius, len(world.map))]
